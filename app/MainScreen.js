@@ -1,12 +1,20 @@
 import * as dbManager from "./DatabaseManager";
 
-import { View, Text, StyleSheet, FlatList, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  StatusBar,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
-() => dbManager.fetchData();
+const delayTimeForUpdateList = 500;
 
 export default function MainScreen() {
   const [data, setData] = useState(dbManager.getData);
+  const [newItem, setNewItem] = useState(null);
 
   useEffect(() => {
     dbManager.createDataBase();
@@ -14,7 +22,7 @@ export default function MainScreen() {
     // we need some time to create and fetch database
     setTimeout(() => {
       setData(dbManager.getData);
-    }, 500);
+    }, delayTimeForUpdateList);
   }, []);
 
   return (
@@ -34,12 +42,30 @@ export default function MainScreen() {
             </View>
           )}
         />
+        <TextInput
+          style={styles.newItem}
+          placeholder="new task"
+          value={newItem}
+          onChangeText={(text) => setNewItem(text)}
+          onSubmitEditing={() => {
+            dbManager.insertData(newItem);
+            setTimeout(() => {
+              setData(dbManager.getData);
+            }, delayTimeForUpdateList / 5);
+          }}
+        />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  newItem: {
+    padding: 15,
+    borderWidth: 1,
+    borderRadius: 15,
+    fontSize: 20,
+  },
   itemsText: {
     fontSize: 18,
   },
@@ -48,10 +74,10 @@ const styles = StyleSheet.create({
   },
   list: {
     marginVertical: 20,
+    width: "90%",
   },
   center: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
 });

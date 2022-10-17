@@ -29,3 +29,16 @@ export const createDataBase = () => {
   );
   fetchData();
 };
+
+export const insertData = (text) => {
+  db.transaction((tx) =>
+    tx.executeSql(
+      "INSERT INTO todos(text, complate) VALUES(?, false)",
+      [text],
+      (txObj, result) =>
+        console.log("insertData: Done( rows: ", result.rowsAffected, ")"),
+      (txObj, error) => console.warn("insertData:\n", error)
+    )
+  );
+  fetchData();
+};
