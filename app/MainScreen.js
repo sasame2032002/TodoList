@@ -1,13 +1,20 @@
-import getData from "./DatabaseManager";
+import * as dbManager from "./DatabaseManager";
 
 import { View, Text, StyleSheet, FlatList, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 
+() => dbManager.fetchData();
+
 export default function MainScreen() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(dbManager.getData);
 
   useEffect(() => {
-    setData(getData);
+    dbManager.createDataBase();
+
+    // we need some time to create and fetch database
+    setTimeout(() => {
+      setData(dbManager.getData);
+    }, 500);
   }, []);
 
   return (
@@ -16,9 +23,14 @@ export default function MainScreen() {
       <View style={styles.list}>
         <FlatList
           data={data}
+          ListEmptyComponent={() => (
+            <View>
+              <Text style={styles.itemsText}>list is empty</Text>
+            </View>
+          )}
           renderItem={(item) => (
             <View style={styles.items}>
-              <Text>{item.item.text}</Text>
+              <Text style={styles.itemsText}>{item.item.text}</Text>
             </View>
           )}
         />
@@ -28,6 +40,9 @@ export default function MainScreen() {
 }
 
 const styles = StyleSheet.create({
+  itemsText: {
+    fontSize: 18,
+  },
   items: {
     paddingVertical: 15,
   },

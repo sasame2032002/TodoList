@@ -1,7 +1,31 @@
-export default getData = () => [
-  { id: 1, text: "todo 1", complate: false },
-  { id: 2, text: "todo 2", complate: false },
-  { id: 3, text: "todo 3", complate: false },
-  { id: 4, text: "todo 4", complate: false },
-  { id: 5, text: "todo 5", complate: false },
-];
+import * as SQLite from "expo-sqlite";
+
+const db = SQLite.openDatabase("todos");
+
+export let getData = [];
+
+export const fetchData = () => {
+  db.transaction((tx) =>
+    tx.executeSql(
+      "SELECT * FROM todos",
+      null,
+      (txObj, { rows: { _array } }) => {
+        getData = _array;
+        console.log("fetchData: Done( rows: ", _array.length, ")");
+      },
+      (txObj, error) => console.warn("fetchData:\n", error)
+    )
+  );
+};
+
+export const createDataBase = () => {
+  db.transaction((tx) =>
+    tx.executeSql(
+      "CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, complate boolean)",
+      null,
+      () => console.log("createDataBase: Done"),
+      (txObj, error) => console.warn("createDataBase:\n", error)
+    )
+  );
+  fetchData();
+};
