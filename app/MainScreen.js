@@ -7,8 +7,11 @@ import {
   FlatList,
   StatusBar,
   TextInput,
+  Dimensions,
+  Animated,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const delayTimeForUpdateList = 500;
 
@@ -29,18 +32,39 @@ export default function MainScreen() {
     <View style={styles.center}>
       <StatusBar showHideTransition={true} />
       <View style={styles.list}>
-        <FlatList
+        <SwipeListView
           data={data}
+          keyExtractor={(data) => data.id}
           ListEmptyComponent={() => (
             <View>
               <Text style={styles.itemsText}>list is empty</Text>
             </View>
           )}
           renderItem={(item) => (
-            <View style={styles.items}>
+            <Animated.View style={styles.items}>
               <Text style={styles.itemsText}>{item.item.text}</Text>
+            </Animated.View>
+          )}
+          renderHiddenItem={() => (
+            <View>
+              <Text>delete</Text>
             </View>
           )}
+          rightOpenValue={-Dimensions.get("window").width}
+          leftOpenValue={75}
+          previewRowKey={"0"}
+          previewOpenValue={-40}
+          previewOpenDelay={3000}
+          useNativeDriver={false}
+          onSwipeValueChange={(swipeData) => {
+            const { key, value } = swipeData;
+            if (value < -Dimensions.get("window").width) {
+              dbManager.deleteData(key);
+              setTimeout(() => {
+                setData(dbManager.getData);
+              }, delayTimeForUpdateList / 10);
+            }
+          }}
         />
         <TextInput
           style={styles.newItem}
@@ -51,7 +75,8 @@ export default function MainScreen() {
             dbManager.insertData(newItem);
             setTimeout(() => {
               setData(dbManager.getData);
-            }, delayTimeForUpdateList / 5);
+            }, delayTimeForUpdateList / 10);
+            setNewItem("");
           }}
         />
       </View>
