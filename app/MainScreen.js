@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 const delayTimeForUpdateList = 500;
 
@@ -46,12 +47,17 @@ export default function MainScreen() {
             </Animated.View>
           )}
           renderHiddenItem={() => (
-            <View>
-              <Text>delete</Text>
+            <View style={styles.hiddenItem}>
+              <Icon
+                name="trash"
+                color="#fff"
+                size={20}
+                style={styles.hiddenItemIcon}
+              />
             </View>
           )}
           rightOpenValue={-Dimensions.get("window").width}
-          leftOpenValue={75}
+          disableRightSwipe
           previewRowKey={"0"}
           previewOpenValue={-40}
           previewOpenDelay={3000}
@@ -85,6 +91,17 @@ export default function MainScreen() {
 }
 
 const styles = StyleSheet.create({
+  hiddenItemIcon: {
+    justifyContent: "center",
+    height: 25,
+  },
+  hiddenItem: {
+    backgroundColor: "red",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingHorizontal: 15,
+  },
   newItem: {
     padding: 15,
     borderWidth: 1,
@@ -96,6 +113,7 @@ const styles = StyleSheet.create({
   },
   items: {
     paddingVertical: 15,
+    backgroundColor: "white",
   },
   list: {
     marginVertical: 20,
