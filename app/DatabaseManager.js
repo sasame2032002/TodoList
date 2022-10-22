@@ -42,3 +42,16 @@ export const insertData = (text) => {
   );
   fetchData();
 };
+
+export const deleteData = (id) => {
+  db.transaction((tx) =>
+    tx.executeSql(
+      "DELETE FROM todos WHERE id=?",
+      [id],
+      (txObj, result) =>
+        console.log("deleteData: Done( rows: ", result.rowsAffected, ")"),
+      (txObj, error) => console.warn("deleteData:\n", error)
+    )
+  );
+  fetchData();
+};
