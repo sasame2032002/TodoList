@@ -54,3 +54,15 @@ export const deleteData = (id) => {
   );
   fetchData();
 };
+
+export const updateData = (id, text) => {
+  db.transaction((tx) =>
+    tx.executeSql(
+      "UPDATE todos SET text=? WHERE id=?",
+      [text, id],
+      (txObj, result) =>
+        console.log("updateData: Done( rows: ", result.rowsAffected, ")"),
+      (txObj, error) => console.warn("updateData:\n", error)
+    )
+  );
+};
