@@ -65,4 +65,5 @@ export const updateData = (id, text) => {
       (txObj, error) => console.warn("updateData:\n", error)
     )
   );
+  fetchData();
 };
