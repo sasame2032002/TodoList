@@ -48,8 +48,7 @@ export const deleteData = (id) => {
     tx.executeSql(
       "DELETE FROM todos WHERE id=?",
       [id],
-      (txObj, result) =>
-        console.log("deleteData: Done( rows: ", result.rowsAffected, ")"),
+      (txObj, result) => console.log("deleteData: Done"),
       (txObj, error) => console.warn("deleteData:\n", error)
     )
   );

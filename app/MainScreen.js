@@ -75,7 +75,7 @@ export default function MainScreen() {
             dbManager.insertData(newItem);
             setTimeout(() => {
               setData(dbManager.getData);
-            }, delayTimeForUpdateList / 10);
+            }, delayTimeForUpdateList / 5);
             setNewItem("");
           }}
         />
